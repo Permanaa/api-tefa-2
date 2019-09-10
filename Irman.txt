@@ -1,0 +1,6 @@
+Nama          : Irman
+Jenis Kelamin : L
+Alamat        : Wonogiri
+Diagnosa      : kesleo
+Ruang         : 313
+Tanggal masuk : 13-09-2019
