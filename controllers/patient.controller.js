@@ -1,6 +1,6 @@
 const uuidv4 = require('uuid/v4')
 const mongoose = require('mongoose')
-const officegen = require('officegen')
+var PDFDocument = require('pdfkit');
 const fs = require('fs')
 const model = require('../models/patient.model')
 const Patient = mongoose.model('patient')
@@ -101,7 +101,7 @@ const patientController = {
     exportHandler: (req, res) => {
         let payload = {
             patient_id: req.params.id
-        }
+        }          
 
         Patient.findOne(payload, (err, value) => {
 
@@ -110,10 +110,24 @@ const patientController = {
             }
 
             if(value){
-                fs.appendFile(`${value.patient_name}.txt`, `Nama          : ${value.patient_name}\nJenis Kelamin : ${value.gender}\nAlamat        : ${value.address}\nDiagnosa      : ${value.diagnosis}\nRuang         : ${value.room}\nTanggal masuk : ${value.date_in}`, function (err) {
-                    if (err) throw err;
-                    console.log('Saved!');
-                })
+                // fs.appendFile(`${value.patient_name}.pdf`, pdf, function (err) {
+                //     if (err) throw err;
+                //     console.log('Saved!');
+                // })
+
+                let pdf = new PDFDocument({
+                    size: 'LEGAL',
+                    info: {
+                      Title: 'Rumah Sakit Biar Sembuh',
+                    }
+                });
+    
+                pdf.text(`Nama          : ${value.patient_name}\nJenis Kelamin : ${value.gender}\nAlamat        : ${value.address}\nDiagnosa      : ${value.diagnosis}\nRuang         : ${value.room}\nTanggal masuk : ${value.date_in}`);
+                pdf.pipe(
+                    fs.createWriteStream(`${value.patient_name}.pdf`)
+                )
+                pdf.fontSize(16)
+                pdf.end();
 
                 res.send({
                     'code': 200,
