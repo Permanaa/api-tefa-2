@@ -116,17 +116,36 @@ const patientController = {
                 // })
 
                 let pdf = new PDFDocument({
-                    size: 'LEGAL',
+                    size: 'A5',
                     info: {
                       Title: 'Rumah Sakit Biar Sembuh',
-                    }
+                    },
+                    fontSize: 12
                 });
+
+                pdf.text('Rumah Sakit Biar Sembuh', {
+                    align: 'center',
+                    fontSize1: 14
+                })
+                pdf.moveDown(1.5)
     
-                pdf.text(`Nama          : ${value.patient_name}\nJenis Kelamin : ${value.gender}\nAlamat        : ${value.address}\nDiagnosa      : ${value.diagnosis}\nRuang         : ${value.room}\nTanggal masuk : ${value.date_in}`);
+                pdf.text(`Nama                         : ${value.patient_name}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Jenis Kelamin            : ${value.gender}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Alamat                       : ${value.address}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Diagnosa                   : ${value.diagnosis}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Ruang                        : ${value.room}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Tanggal masuk          : ${value.date_in}`)
+                pdf.moveDown(0.5)
+                pdf.text(`Tanggal keluar           : ${value.date_out}`)
+
                 pdf.pipe(
                     fs.createWriteStream(`${value.patient_name}.pdf`)
                 )
-                pdf.fontSize(16)
                 pdf.end();
 
                 res.send({
